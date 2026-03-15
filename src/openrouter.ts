@@ -62,7 +62,7 @@ export async function callOpenRouter(opts: CallOpenRouterOptions): Promise<strin
       headers: {
         "Authorization": `Bearer ${apiKey}`,
         "Content-Type": "application/json",
-        "HTTP-Referer": "https://github.com/deepplan-mcp",
+        "HTTP-Referer": "https://github.com/deepplandev/deepplan-mcp",
         "X-Title": "DeepPlan MCP",
       },
       body: JSON.stringify({

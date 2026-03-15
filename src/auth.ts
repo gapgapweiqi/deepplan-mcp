@@ -9,19 +9,31 @@
  */
 
 import { config } from "./config.js";
-import { exec } from "node:child_process";
+import { spawn } from "node:child_process";
 
 /** Try to open a URL in the user's default browser (best-effort, no dependency) */
 function openBrowser(url: string): void {
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol !== "https:") return;
+  } catch {
+    return;
+  }
+
   const platform = process.platform;
   const cmd =
     platform === "darwin" ? "open" :
-    platform === "win32" ? "start" :
+    platform === "win32" ? "cmd" :
     "xdg-open";
 
-  exec(`${cmd} "${url}"`, () => {
+  const args = platform === "win32" ? ["/c", "start", "", url] : [url];
+
+  try {
+    const child = spawn(cmd, args, { stdio: "ignore", detached: true });
+    child.unref();
+  } catch {
     // best-effort — ignore errors (e.g. headless server)
-  });
+  }
 }
 
 export interface AuthCheck {
